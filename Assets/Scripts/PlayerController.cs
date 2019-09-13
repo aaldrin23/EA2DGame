@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +7,8 @@ public class PlayerController : MonoBehaviour
 {
   public LayerMask groundLayers;
 
-  public float speed = 5;
+  public float runSpeed = 4;
+  public float walkSpeed = 2;
 
   public float jumpForce = 7;
 
@@ -14,6 +16,10 @@ public class PlayerController : MonoBehaviour
 
   private CapsuleCollider col;
   private GameObject currentHitObject;
+  private Animator animator;
+
+  private bool facingRight = true;
+
   float hitDistance = 0f;
 
   #region Monobehaviour API
@@ -22,20 +28,53 @@ public class PlayerController : MonoBehaviour
   {
     rb = GetComponent<Rigidbody>();
     col = GetComponent<CapsuleCollider>();
+    animator = GetComponent<Animator>();
   }
 
   void Update()
   {
-    float moveHorizontal = Input.GetAxis("Horizontal");
 
-    rb.velocity = new Vector3(moveHorizontal * speed, rb.velocity.y);
+  }
+
+  void FixedUpdate()
+  {
+    float move = Input.GetAxis("Horizontal");
+
+    CheckDirection(move);
+
+    float speed = move;
+    bool shift = Input.GetButton("Shift");
+
+    speed = move * (shift ? walkSpeed : runSpeed);
+    rb.velocity = new Vector3(speed, rb.velocity.y);
+
+    animator.SetBool("walk", shift);
+    animator.SetFloat("speed", Mathf.Abs(speed));
 
     if (IsGrounded() && Input.GetButtonDown("Jump"))
     {
       rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
+  }
 
-    // Debug.Log(IsGrounded());
+  private void CheckDirection(float move)
+  {
+    if (move > .5 && !facingRight)
+    {
+      Flip();
+    }
+    else if (move < -0.5 && facingRight)
+    {
+      Flip();
+    }
+  }
+
+  void Flip()
+  {
+    facingRight = !facingRight;
+    Vector3 scale = transform.localScale;
+    scale.z *= -1;
+    transform.localScale = scale;
   }
 
   private bool IsGrounded()
