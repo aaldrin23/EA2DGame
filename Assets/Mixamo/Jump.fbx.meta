@@ -190,7 +190,7 @@ ModelImporter:
       name: Jump
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 10.9
+      lastFrame: 7.7
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -217,7 +217,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Falling
       takeName: mixamo.com
-      firstFrame: 10.9
+      firstFrame: 7.7
       lastFrame: 18.4
       wrapMode: 0
       orientationOffsetY: 0
@@ -245,36 +245,8 @@ ModelImporter:
     - serializedVersion: 16
       name: Landing
       takeName: mixamo.com
-      firstFrame: 0
-      lastFrame: 30
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Landed
-      takeName: mixamo.com
-      firstFrame: 19.9
-      lastFrame: 24.8
+      firstFrame: 18.4
+      lastFrame: 24.9
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

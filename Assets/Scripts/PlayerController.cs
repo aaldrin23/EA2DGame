@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
   public float runSpeed = 4;
   public float walkSpeed = 2;
 
-  public float jumpForce = 7;
+  public float jumpForce = 5;
 
   private Rigidbody rb;
 
@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
   private Animator animator;
 
   private bool facingRight = true;
+  private bool grounded = true;
+  private bool landing = false;
 
   float hitDistance = 0f;
 
@@ -48,13 +50,19 @@ public class PlayerController : MonoBehaviour
     speed = move * (shift ? walkSpeed : runSpeed);
     rb.velocity = new Vector3(speed, rb.velocity.y);
 
+
     animator.SetBool("walk", shift);
     animator.SetFloat("speed", Mathf.Abs(speed));
 
-    if (IsGrounded() && Input.GetButtonDown("Jump"))
+    GroundCheck();
+    animator.SetBool("grounded", grounded);
+    animator.SetBool("landing", landing);
+
+    if (grounded && Input.GetButtonDown("Jump"))
     {
       rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
+    animator.SetFloat("vspeed", rb.velocity.y);
   }
 
   private void CheckDirection(float move)
@@ -77,28 +85,31 @@ public class PlayerController : MonoBehaviour
     transform.localScale = scale;
   }
 
-  private bool IsGrounded()
+  private void GroundCheck()
   {
     RaycastHit hit;
-    float maxDistance = 1f;
-    if (Physics.SphereCast(transform.position, col.height / 2, Vector3.down, out hit, maxDistance, groundLayers))
+    float maxDistance = 5f;
+    Vector3 origin = new Vector3(transform.position.x, transform.position.y + (col.radius), transform.position.z);
+    if (Physics.SphereCast(origin, col.radius, Vector3.down, out hit, maxDistance, groundLayers))
     {
       currentHitObject = hit.transform.gameObject;
       hitDistance = hit.distance;
+      Debug.Log(hitDistance);
 
-      return hitDistance >= .1f;
+      grounded = hitDistance <= 0.01f;
+      landing = !grounded && hitDistance <= 0.2f;
     }
     else
     {
-      return false;
+      grounded = false;
+      landing = false;
     }
   }
 
   private void OnDrawGizmosSelected()
   {
     Gizmos.color = Color.red;
-    Debug.DrawLine(transform.position, transform.position + transform.forward * hitDistance);
-    Gizmos.DrawWireSphere(transform.position + transform.forward * hitDistance, col.radius);
+    Gizmos.DrawWireSphere(new Vector3(transform.position.x, transform.position.y + (col.radius), transform.position.z), col.radius);
   }
 
   #endregion
